@@ -29,15 +29,14 @@ def get_train_data():
         train_data += i
     train_data = np.array(train_data,dtype=object)
     train_data_x, train_data_y = train_data[:,-1], train_data[:,0:-1]
-    train_data_x, train_data_y, test_data_x, test_data_y = train_test_split(train_data_x, train_data_y, test_size=0.3)
-    return train_data_x, train_data_y, test_data_x, test_data_y
+    return train_data_x, train_data_y
 
 def get_test_data():
-    train_data = []
+    test_data = []
     for i in get_data_vec_ins(pos_test_data, 1)+get_data_vec_ins(neg_test_data, 0):
-        train_data += i
+        test_data += i
     test_data = np.array(test_data,dtype=object)
-    test_data_x, test_data_y = train_data[:,-1], train_data[:,0:-1]
+    test_data_x, test_data_y = test_data[:,-1], test_data[:,0:-1]
     return test_data_x, test_data_y
 
 
