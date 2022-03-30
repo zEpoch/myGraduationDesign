@@ -28,8 +28,9 @@ def get_train_data():
     for i in get_data_vec_ins(pos_train_data, 1)+get_data_vec_ins(neg_train_data, 0):
         train_data += i
     train_data = np.array(train_data,dtype=object)
-    train_data_x, train_data_y = train_data[:,-1], train_data[:,0:-1]
-    return train_data_x, train_data_y
+    train_data_x, train_data_y = train_data[:,0:-1], train_data[:,-1]
+    # print(train_data_x.shape,train_data_y.shape)
+    return np.array([i[0] for i in train_data_x]), np.array(train_data_y)
 
 def get_test_data():
     test_data = []
