@@ -9,7 +9,7 @@ torch.manual_seed(1) #reproducible
 
 #Hyper Parameters
 EPOCH = 10
-BATCH_SIZE = 1
+BATCH_SIZE = 10
 LR = 0.001
 
 class CNN(nn.Module):
@@ -67,8 +67,7 @@ prob_all = []
 label_all = []
 for i, (x,y) in enumerate(train_loader):
     prob = cnn(x) #表示模型的预测输出
-    print([abs(abs(max(prob[0]))-1).detach().numpy()],y)
-    prob_all.extend([abs(abs(max(prob[0]))-1).detach().numpy()]) #prob[:,1]返回每一行第二列的数，根据该函数的参数可知，y_score表示的较大标签类的分数，因此就是最大索引对应的那个值，而不是最大索引值
+    prob_all.extend(prob[:,1].detach().numpy()) #prob[:,1]返回每一行第二列的数，根据该函数的参数可知，y_score表示的较大标签类的分数，因此就是最大索引对应的那个值，而不是最大索引值
     label_all.extend(y)
 print(len(prob_all),len(label_all))
 print("AUC:{:.4f}".format(roc_auc_score(label_all,prob_all)))
