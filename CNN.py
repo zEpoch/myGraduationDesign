@@ -8,7 +8,7 @@ from datains import get_test_data
 torch.manual_seed(1) #reproducible
 
 #Hyper Parameters
-EPOCH = 1
+EPOCH = 10
 BATCH_SIZE = 1
 LR = 0.001
 
@@ -29,7 +29,6 @@ class CNN(nn.Module):
     def forward(self, x):
         x = self.conv1(x.to(torch.float32))
         x = torch.flatten(x,1)
-        #x = x.view(x.size(1), -1) #flat (batch_size, 32*7*7)
         output = self.out(x)
         return output
 
@@ -52,7 +51,8 @@ for epoch in range(EPOCH):
         #计算误差
         loss = loss_func(output, batch_y)
         #清空上一次梯度
-        # print(loss)
+        if((i+1)%1000==0):
+            print('loss',loss)
         optimizer.zero_grad()
         #误差反向传递
         loss.backward()
@@ -65,10 +65,10 @@ test_loader = get_test_data(BATCH_SIZE)
 from sklearn.metrics import roc_auc_score
 prob_all = []
 label_all = []
-for i, (x,y) in enumerate(test_loader):
+for i, (x,y) in enumerate(train_loader):
     prob = cnn(x) #表示模型的预测输出
-    print([prob[0][1].detach().numpy()],y)
-    prob_all.extend([prob[0][0].detach().numpy()]) #prob[:,1]返回每一行第二列的数，根据该函数的参数可知，y_score表示的较大标签类的分数，因此就是最大索引对应的那个值，而不是最大索引值
+    print([abs(abs(max(prob[0]))-1).detach().numpy()],y)
+    prob_all.extend([abs(abs(max(prob[0]))-1).detach().numpy()]) #prob[:,1]返回每一行第二列的数，根据该函数的参数可知，y_score表示的较大标签类的分数，因此就是最大索引对应的那个值，而不是最大索引值
     label_all.extend(y)
 print(len(prob_all),len(label_all))
 print("AUC:{:.4f}".format(roc_auc_score(label_all,prob_all)))
