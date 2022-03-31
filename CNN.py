@@ -2,14 +2,17 @@ import torch
 import torch.nn as nn
 from torch.autograd import Variable
 import matplotlib.pyplot as plt
-import torchvision
 from datains import get_train_data
 from datains import get_test_data
+from sklearn.metrics import roc_auc_score
+from sklearn.metrics import roc_curve
+from sklearn.metrics import auc
+
 torch.manual_seed(1) #reproducible
 
 #Hyper Parameters
 EPOCH = 10
-BATCH_SIZE = 10
+BATCH_SIZE = 20
 LR = 0.001
 
 class CNN(nn.Module):
@@ -41,7 +44,9 @@ loss_func = nn.CrossEntropyLoss()
 
 
 train_loader = get_train_data(BATCH_SIZE)
+
 #training loop
+
 for epoch in range(EPOCH):
     for i, (x, y) in enumerate(train_loader):
         batch_x = Variable(x)
@@ -59,16 +64,51 @@ for epoch in range(EPOCH):
         #优化器参数更新
         optimizer.step()
 
+train_prob_all = []
+train_label_all = []
+for i, (x, y) in enumerate(train_loader):  
+    output = cnn(x)
+    train_prob_all.extend(output[:,1].detach().numpy())
+    train_label_all.extend(y)
 
-y_score = []
 test_loader = get_test_data(BATCH_SIZE)
-from sklearn.metrics import roc_auc_score
+
 prob_all = []
 label_all = []
-for i, (x,y) in enumerate(train_loader):
+for i, (x,y) in enumerate(test_loader):
     prob = cnn(x) #表示模型的预测输出
     prob_all.extend(prob[:,1].detach().numpy()) #prob[:,1]返回每一行第二列的数，根据该函数的参数可知，y_score表示的较大标签类的分数，因此就是最大索引对应的那个值，而不是最大索引值
     label_all.extend(y)
-print(len(prob_all),len(label_all))
 
 print("AUC:{:.4f}".format(roc_auc_score(label_all,prob_all)))
+
+train_fpr, train_tpr, _ = roc_curve(train_label_all,train_prob_all)
+fpr, tpr, _ = roc_curve(label_all,prob_all)
+train_roc_auc = auc(train_fpr, train_tpr)
+roc_auc = auc(fpr, tpr)
+
+
+plt.figure()
+lw = 2
+plt.plot(
+    fpr,
+    tpr,
+    color="darkorange",
+    lw=lw,
+    label="test_ROC curve (area = %0.2f)" % roc_auc,
+)
+plt.plot(
+    train_fpr,
+    train_tpr,
+    color="pink",
+    lw=lw,
+    label="train_ROC curve (area = %0.2f)" % train_roc_auc,
+)
+plt.plot([0, 1], [0, 1], color="navy", lw=lw, linestyle="--")
+plt.xlim([0.0, 1.0])
+plt.ylim([0.0, 1.05])
+plt.xlabel("False Positive Rate")
+plt.ylabel("True Positive Rate")
+plt.title("Receiver operating characteristic example")
+plt.legend(loc="lower right")
+plt.show()
