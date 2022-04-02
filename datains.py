@@ -52,7 +52,7 @@ def get_train_data(BATCH_SIZE):
         dataset=torch_train_data,      # torch TensorDataset format
         batch_size=BATCH_SIZE,      # mini batch size
         shuffle=True,               # 要不要打乱数据 (打乱比较好)
-        drop_last=False,
+        drop_last=True,
         num_workers=0,              # 多线程来读数据，不要用多线程，会变得不幸
     )
     return train_data_loader
@@ -68,7 +68,7 @@ def get_test_data(BATCH_SIZE):
         dataset=torch_test_data,      # torch TensorDataset format
         batch_size=BATCH_SIZE,      # mini batch size
         shuffle=True,               # 要不要打乱数据 (打乱比较好)
-        drop_last=False,
+        drop_last=True,
         num_workers=0,              # 多线程来读数据，不要用多线程，会变得不幸
     )
     return test_loader

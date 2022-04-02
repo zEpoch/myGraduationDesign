@@ -69,7 +69,7 @@ def main():
     optimizer = optim.Adam(model.parameters(), lr=0.001)
 
     # Training
-    for epoch in range(1000):
+    for epoch in range(150):
 
         input_batch, target_batch = random_batch(skip_grams, batch_size)
 

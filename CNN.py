@@ -12,8 +12,8 @@ torch.manual_seed(1) #reproducible
 
 #Hyper Parameters
 EPOCH = 10
-BATCH_SIZE = 20
-LR = 0.001
+BATCH_SIZE = 4
+LR = 0.002
 
 class CNN(nn.Module):
     def __init__(self):
@@ -21,24 +21,25 @@ class CNN(nn.Module):
         self.conv1 = nn.Sequential( #input shape (1,27,2)
             nn.Conv1d(in_channels=27, #input height
                       out_channels=27, #n_filter
-                     kernel_size=2, #filter size
-                     stride=1, #filter step
-                     ), #output shape (1,27,1)
+                      kernel_size=2, #filter size
+                      stride=1, #filter step
+                    ), #output shape (1,27,1)
             nn.ReLU(),
 
         )
-        self.out = nn.Linear(27,2)
-
+        self.layer1 = nn.Linear(27,10)
+        self.out = nn.Linear(10,2)
     def forward(self, x):
         x = self.conv1(x.to(torch.float32))
         x = torch.flatten(x,1)
+        x = self.layer1(x)
         output = self.out(x)
         return output
 
 cnn = CNN()
 #optimizer
 optimizer = torch.optim.Adam(cnn.parameters(), lr=LR)
-
+# optimizer = torch.optim.SGD(cnn.parameters(), lr=0.01)
 #loss_fun
 loss_func = nn.CrossEntropyLoss()
 
