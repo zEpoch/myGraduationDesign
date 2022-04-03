@@ -18,12 +18,12 @@ LR = 0.002
 class CNN(nn.Module):
     def __init__(self):
         super(CNN, self).__init__()
-        self.conv1 = nn.Sequential( #input shape (1,27,2)
+        self.conv1 = nn.Sequential( #input shape (n,27,2)
             nn.Conv1d(in_channels=27, #input height
                       out_channels=27, #n_filter
                       kernel_size=2, #filter size
                       stride=1, #filter step
-                    ), #output shape (1,27,1)
+                    ), #output shape (n,27,1)
             nn.ReLU(),
 
         )
@@ -56,6 +56,7 @@ for epoch in range(EPOCH):
         output = cnn(batch_x)
         #计算误差
         loss = loss_func(output, batch_y)
+        print(loss)
         #清空上一次梯度
         if((i+1)%1000==0):
             print('loss',loss)

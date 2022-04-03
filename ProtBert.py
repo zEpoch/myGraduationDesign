@@ -8,7 +8,10 @@ from sklearn.model_selection import train_test_split
 from transformers import AutoTokenizer, AutoModel, pipeline
 import re
 import numpy as np
-
+from transformers import logging
+# 训练期间，没有使用池化器来计算损失
+logging.set_verbosity_warning()
+logging.set_verbosity_error()
 pos_train_data = dataload.get_pos_train_data()
 neg_train_data = dataload.get_neg_train_data()
 pos_test_data = dataload.get_pos_test_data()
@@ -39,13 +42,14 @@ def get_data_vec_ins(data, label):
     data = fe(data)
     data = np.array(data)
     for i in data:
-        temp.append([i,label])
+        temp.append([i[0][0],label])
     return temp
 
 
 def get_train_data(BATCH_SIZE):
     train_data = []
-    for i in get_data_vec_ins(pos_train_data, 1)+get_data_vec_ins(neg_train_data, 0):
+    # for i in get_data_vec_ins(pos_train_data, 1)+get_data_vec_ins(neg_train_data, 0):
+    for i in get_data_vec_ins(pos_train_data, 1):
         print(i)
         train_data += i
     train_data,test_data = train_test_split(np.array(train_data,dtype=object),train_size=0.75)
