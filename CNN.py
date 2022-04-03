@@ -12,7 +12,7 @@ torch.manual_seed(1) #reproducible
 
 #Hyper Parameters
 EPOCH = 10
-BATCH_SIZE = 4
+BATCH_SIZE = 20
 LR = 0.002
 
 class CNN(nn.Module):
@@ -44,7 +44,7 @@ optimizer = torch.optim.Adam(cnn.parameters(), lr=LR)
 loss_func = nn.CrossEntropyLoss()
 
 
-train_loader = get_train_data(BATCH_SIZE)
+train_loader,test_loader = get_train_data(BATCH_SIZE)
 
 #training loop
 
@@ -72,7 +72,7 @@ for i, (x, y) in enumerate(train_loader):
     train_prob_all.extend(output[:,1].detach().numpy())
     train_label_all.extend(y)
 
-test_loader = get_test_data(BATCH_SIZE)
+# test_loader = get_test_data(BATCH_SIZE)
 
 prob_all = []
 label_all = []
