@@ -2,8 +2,8 @@ import torch
 import torch.nn as nn
 from torch.autograd import Variable
 import matplotlib.pyplot as plt
-from datains import get_train_data
-from datains import get_test_data
+from ProtBert import get_train_data
+# from datains import get_test_data
 from sklearn.metrics import roc_auc_score
 from sklearn.metrics import roc_curve
 from sklearn.metrics import auc

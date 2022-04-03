@@ -1,6 +1,3 @@
-'''
-  code by Tae Hwan Jung(Jeff Jung) @graykode
-'''
 import numpy as np
 import torch
 import torch.nn as nn
@@ -11,12 +8,7 @@ from dataload import get_data
 dtype = torch.FloatTensor
 
 # 3 Words Sentence
-""" 
-sentences = [ "i like dog", "i like cat", "i like animal",
-              "dog cat animal", "apple cat dog like", "dog fish milk like",
-              "dog cat eyes like", "i like apple", "apple i hate",
-              "apple i movie book music like", "cat dog hate", "cat dog like"]
-"""
+
 def main():
     sentences = get_data()
     word_sequence = " ".join(sentences).split()
@@ -87,15 +79,15 @@ def main():
         loss.backward()
         optimizer.step()
     return model,word_list
-""" 
-for i, label in enumerate(word_list):
-    W, WT = model.parameters()
-    x,y = float(W[i][0]), float(W[i][1])
-    print(x,y,label)
-    plt.scatter(x, y)
-    plt.annotate(label, xy=(x, y), xytext=(5, 2), textcoords='offset points', ha='right', va='bottom')
-plt.show()
-"""
+    """ 
+    for i, label in enumerate(word_list):
+        W, WT = model.parameters()
+        x,y = float(W[i][0]), float(W[i][1])
+        print(x,y,label)
+        plt.scatter(x, y)
+        plt.annotate(label, xy=(x, y), xytext=(5, 2), textcoords='offset points', ha='right', va='bottom')
+    plt.show()
+    """
 ans = {}
 def get_vec():
     model,word_list = main()

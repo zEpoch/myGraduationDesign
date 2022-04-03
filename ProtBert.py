@@ -1,19 +1,22 @@
 from typing import final
-import word2vec
 import dataload
-import sklearn
 from sklearn.model_selection import train_test_split
 import numpy as np
 import torch
 import torch.utils.data as Data
 from sklearn.model_selection import train_test_split
 from transformers import AutoTokenizer, AutoModel, pipeline
-import os
+import re
+import numpy as np
 
 pos_train_data = dataload.get_pos_train_data()
 neg_train_data = dataload.get_neg_train_data()
 pos_test_data = dataload.get_pos_test_data()
 neg_test_data = dataload.get_neg_test_data()
+
+tokenizer = AutoTokenizer.from_pretrained("Rostlab/prot_bert", do_lower_case=False)
+model = AutoModel.from_pretrained("Rostlab/prot_bert")
+fe = pipeline('feature-extraction', model=model, tokenizer=tokenizer)
 
 # 定义GetLoader类，继承Dataset方法，并重写__getitem__()和__len__()方法
 class GetLoader(torch.utils.data.Dataset):
@@ -31,19 +34,19 @@ class GetLoader(torch.utils.data.Dataset):
         return len(self.data)
 
 def get_data_vec_ins(data, label):
-    temp = [[] for _ in range(len(data))]
-    for i in range(len(data)):
-        con_temp = []
-        for j in data[i].split(' '):
-            con_temp.append(ans[str(j)])
-        temp[i].append([con_temp,label])
-        
+    temp = []
+    data = [re.sub(r"[UZOB]", "X", sequence) for sequence in data]
+    data = fe(data)
+    data = np.array(data)
+    for i in data:
+        temp.append([i,label])
     return temp
 
 
 def get_train_data(BATCH_SIZE):
     train_data = []
     for i in get_data_vec_ins(pos_train_data, 1)+get_data_vec_ins(neg_train_data, 0):
+        print(i)
         train_data += i
     train_data,test_data = train_test_split(np.array(train_data,dtype=object),train_size=0.75)
     train_data_x, train_data_y = train_data[:,0:-1], train_data[:,-1]

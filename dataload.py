@@ -32,7 +32,7 @@ def get_neg_test_data():
             if i%2==1:
                 text.append(' '.join(list(lines[i].split()[0])))
 
-    with open('./test/test_neg-P.txt') as f:
+    """ with open('./test/test_neg-P.txt') as f:
         lines = f.readlines()
         for i in range(lines.__len__()):
             if i%2==1:
@@ -48,7 +48,7 @@ def get_neg_test_data():
         lines = f.readlines()
         for i in range(lines.__len__()):
             if i%2==1:
-                text.append(' '.join(list(lines[i].split()[0])))
+                text.append(' '.join(list(lines[i].split()[0]))) """
     
     return text
 
@@ -60,7 +60,7 @@ def get_pos_train_data():
         for i in range(lines.__len__()):
             if i%2==1:
                 text.append(' '.join(list(lines[i].split()[0])))
-    with open('./train/train_pos-P.txt') as f:
+    """ with open('./train/train_pos-P.txt') as f:
         lines = f.readlines()
         for i in range(lines.__len__()):
             if i%2==1:
@@ -74,7 +74,7 @@ def get_pos_train_data():
         lines = f.readlines()
         for i in range(lines.__len__()):
             if i%2==1:
-                text.append(' '.join(list(lines[i].split()[0])))
+                text.append(' '.join(list(lines[i].split()[0]))) """
     return text
 
 def get_neg_train_data():
