@@ -37,20 +37,22 @@ class GetLoader(torch.utils.data.Dataset):
         return len(self.data)
 
 def get_data_vec_ins(data, label):
-    temp = []
+    temp = [[] for _ in range(len(data))]
     data = [re.sub(r"[UZOB]", "X", sequence) for sequence in data]
     data = fe(data)
     data = np.array(data)
-    for i in data:
-        temp.append([i[0][0],label])
+    for i in range(len(data)):
+        ans_temp = []
+        for j in data[i][0]:
+            ans_temp.append(j)
+        temp[i].append([ans_temp,label])
     return temp
 
 
 def get_train_data(BATCH_SIZE):
     train_data = []
     # for i in get_data_vec_ins(pos_train_data, 1)+get_data_vec_ins(neg_train_data, 0):
-    for i in get_data_vec_ins(pos_train_data, 1):
-        print(i)
+    for i in get_data_vec_ins(pos_train_data, 1)+get_data_vec_ins(neg_train_data, 0):
         train_data += i
     train_data,test_data = train_test_split(np.array(train_data,dtype=object),train_size=0.75)
     train_data_x, train_data_y = train_data[:,0:-1], train_data[:,-1]

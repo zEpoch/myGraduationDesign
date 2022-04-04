@@ -3,6 +3,7 @@ import torch.nn as nn
 from torch.autograd import Variable
 import matplotlib.pyplot as plt
 from ProtBert import get_train_data
+# from datains import get_train_data
 # from datains import get_test_data
 from sklearn.metrics import roc_auc_score
 from sklearn.metrics import roc_curve
@@ -19,9 +20,9 @@ class CNN(nn.Module):
     def __init__(self):
         super(CNN, self).__init__()
         self.conv1 = nn.Sequential( #input shape (n,27,2)
-            nn.Conv1d(in_channels=27, #input height
+            nn.Conv1d(in_channels=29, #input height
                       out_channels=27, #n_filter
-                      kernel_size=2, #filter size
+                      kernel_size=1024, #filter size
                       stride=1, #filter step
                     ), #output shape (n,27,1)
             nn.ReLU(),
@@ -81,7 +82,6 @@ for i, (x,y) in enumerate(test_loader):
     prob = cnn(x) #表示模型的预测输出
     prob_all.extend(prob[:,1].detach().numpy()) #prob[:,1]返回每一行第二列的数，根据该函数的参数可知，y_score表示的较大标签类的分数，因此就是最大索引对应的那个值，而不是最大索引值
     label_all.extend(y)
-
 print("AUC:{:.4f}".format(roc_auc_score(label_all,prob_all)))
 
 train_fpr, train_tpr, _ = roc_curve(train_label_all,train_prob_all)

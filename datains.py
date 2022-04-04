@@ -44,6 +44,7 @@ def get_data_vec_ins(data, label):
 def get_train_data(BATCH_SIZE):
     train_data = []
     for i in get_data_vec_ins(pos_train_data, 1)+get_data_vec_ins(neg_train_data, 0):
+        print(i)
         train_data += i
     train_data,test_data = train_test_split(np.array(train_data,dtype=object),train_size=0.75)
     train_data_x, train_data_y = train_data[:,0:-1], train_data[:,-1]
